@@ -1,0 +1,10 @@
+
+
+
+@route(method = GET, "^/user")
+def get(request):
+    pass
+
+expands to:
+
+url(r'^user', method_dispatch(GET = user.get))
