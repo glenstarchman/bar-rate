@@ -1,6 +1,6 @@
 import React from 'react';
 import BaseView from './Base.js';
-import {callApi} from '../api/fetcher.js';
+import {callApi} from '../common/fetcher.js';
 import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
 
 export default class BartenderDetail extends BaseView {

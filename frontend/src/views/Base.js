@@ -1,5 +1,5 @@
 import React from 'react';
-import {callApi} from '../api/fetcher.js';
+import {callApi} from '../common/fetcher.js';
 import { ActivityIndicator, View  } from 'react-native';
 
 
