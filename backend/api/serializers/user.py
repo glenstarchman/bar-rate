@@ -12,8 +12,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-
     id = HashidSerializerCharField()
     profile = ProfileSerializer()
     current_checkin = serializers.SerializerMethodField()

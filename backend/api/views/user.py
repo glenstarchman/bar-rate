@@ -7,9 +7,9 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from .base import build_response
 from ..util import Pagination
+from .taggable import TaggableViewSet
 
-
-class UserViewSet(viewsets.ViewSet):
+class UserViewSet(TaggableViewSet):
 
     queryset = User.objects.all()
     pagination_class = Pagination
@@ -23,8 +23,6 @@ class UserViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         queryset = User.objects.all()
-        print(queryset)
-        print(pk)
         user = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(user)
         return build_response(request, serializer.data)

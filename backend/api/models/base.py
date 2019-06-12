@@ -118,7 +118,7 @@ class BarRateTimestampModel(models.Model):
 
     #for pagination
     def _get_recent(self, qs, count=settings.TAGGABLE_COUNT, start=0):
-        return qs.all()[start:start+count]
+        return list(qs.all()[start:start+count])
 
     #permissions for dry-rest-permission
     #by default all objects can be read but not written/created
@@ -195,25 +195,43 @@ class BarRateTaggableModel(BarRateModel):
     comments = GenericRelation("Comment", related_name="comments")
     followers = GenericRelation("Follower", related_name="followers")
     bookmarks = GenericRelation('Bookmark', related_name='bookmarks')
+    reviews = GenericRelation('Review', related_name='reviews')
+    images = GenericRelation('Image', related_name='images')
 
+
+    @property
     def recent_comments(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.comments, count, start)
 
+    @property
     def recent_likes(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.likes, count, start)
 
+    @property
     def recent_dislikes(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.dislikes, count, start)
 
+    @property
     def recent_followers(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.followers, count, start)
 
+    @property
     def recent_bookmarks(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.bookmarks, count, start)
 
+    @property
     def recent_tags(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.tags, count, start)
 
+    @property
+    def recent_reviews(self, count=settings.TAGGABLE_COUNT, start=0):
+        return self._get_recent(self.reviews, count, start)
+
+    @property
+    def recent_images(self, count=settings.TAGGABLE_COUNT, start=0):
+        return self._get_recent(self.images, count, start)
+
+    @property
     def bookmark_count(self):
         return self.bookmarks.count()
 
@@ -242,12 +260,16 @@ class BarRateTaggableModel(BarRateModel):
     def tag_count(self):
         return self.tags.count()
 
+    @property
+    def review_count(self):
+        return self.reviews.count()
 
     def add_like(self, user):
-        self.remove_like(user)
-        print(self.likes)
-        self.likes.create(
-            user=user, content_object=self)
+        if self.likes.filter(user=user).count() > 0:
+            self.remove_like(user)
+        else:
+            self.likes.create(
+                user=user, content_object=self)
 
     def add_dislike(self, user):
         try:
@@ -264,6 +286,11 @@ class BarRateTaggableModel(BarRateModel):
         self.tags.create(
             user=user, content_object=self, tag_text=tag_text)
 
+    def add_review(self, user, review_text, rating=None):
+        self.tags.create(
+            user=user, content_object=self,
+            review_text=review_text, rating=rating)
+
     def add_follower(self, user):
         self.following.create(user=user, content_object=self)
 
@@ -278,9 +305,7 @@ class BarRateTaggableModel(BarRateModel):
 
     def remove_like(self, user):
         try:
-            x = self.likes.get(user=user)
-            x.delete()
-
+            self.likes.filter(user=user).delete()
         except Exception as e:
             return self.likes
 
@@ -288,8 +313,8 @@ class BarRateTaggableModel(BarRateModel):
         try:
             id = self.id.id
             ct = self._ct()
-            self.dislikes.get(
-                user=user, content_type=ct, object_id=id).delete()
+            self.dislikes.filter(
+                user=user).delete()
         except:
             pass
 

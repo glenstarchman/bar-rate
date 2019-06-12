@@ -44,10 +44,10 @@ class Bar(BarRateTaggableModel):
     def popular_hours(self):
         return BarPopularHours.objects.filter(bar=self)
 
-    @property
-    def recent_reviews(self):
-        """return 5 most recent reviews"""
-        return BarReview.objects.filter(bar=self).order_by('-created_at')[:5]
+    #@property
+    #def recent_reviews(self):
+    #    """return 5 most recent reviews"""
+    #    return BarReview.objects.filter(bar=self).order_by('-created_at')[:5]
 
     @property
     def total_checkins(self):
@@ -177,15 +177,15 @@ class BarPopularHours(BarRateTaggableModel):
         db_table = 'bar_popular_hours'
 
 
-class BarReview(BarRateTaggableModel):
-    bar = models.ForeignKey(Bar, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    review = models.CharField(max_length=2048)
-    rating = models.IntegerField(null=True, blank=True)
-    public = models.BooleanField(default=True)
-
-    class Meta:
-        db_table = 'bar_review'
+#class BarReview(BarRateTaggableModel):
+#    bar = models.ForeignKey(Bar, on_delete=models.CASCADE)
+#    user = models.ForeignKey(User, on_delete=models.CASCADE)
+#    review = models.CharField(max_length=2048)
+#    rating = models.IntegerField(null=True, blank=True)
+#    public = models.BooleanField(default=True)
+#
+#    class Meta:
+#        db_table = 'bar_review'
 
 
 class BarCheckin(BarRateModel):

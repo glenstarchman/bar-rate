@@ -2,6 +2,7 @@ from rest_framework import serializers
 from hashid_field.rest import HashidSerializerCharField
 from ..models import *
 from .user import MiniUserSerializer
+from .taggable_serializer import TaggableSerializer
 
 
 class MoodSerializer(serializers.ModelSerializer):
@@ -117,16 +118,16 @@ class BarCheckinSerializer(serializers.ModelSerializer):
                   'feeling', 'created_at', )
 
 
-class BarReviewSerializer(serializers.ModelSerializer):
+#class BarReviewSerializer(serializers.ModelSerializer):
 
-    user = MiniUserSerializer()
-    created_at = serializers.DateTimeField()
+#    user = MiniUserSerializer()
+#    created_at = serializers.DateTimeField()
+#
+#    class Meta:
+#        model = BarReview
+#        fields = ('user', 'review', 'rating', 'created_at')
 
-    class Meta:
-        model = BarReview
-        fields = ('user', 'review', 'rating', 'created_at')
-
-class BarSerializer(serializers.ModelSerializer):
+class BarSerializer(TaggableSerializer):
 
     id = HashidSerializerCharField()
     location = serializers.ReadOnlyField()
@@ -136,12 +137,12 @@ class BarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bar
-        fields = ('id', 'name', 'location', 'address1', 'address2', 'city',
+        fields = TaggableSerializer.Meta.fields + ['id', 'name', 'location', 'address1', 'address2', 'city',
                   'state_province', 'postal_code', 'country',
                   'phone', 'email', 'hours', 'meta', 'happy_hour',
-                  'popular_hours', 'recent_reviews', 'total_checkins',
-                  'current_checkins', 'images', 'other_names', 'rating',
-        )
+                  'popular_hours', 'total_checkins',
+                  'current_checkins', 'other_names', 'rating',
+       ]
 
 
 class BarCreateSerializer(serializers.ModelSerializer):
@@ -168,7 +169,7 @@ class BarMiniSerializer(serializers.ModelSerializer):
                   'state_province', 'postal_code', 'country',
                   'phone', 'email',
                   'total_checkins',
-                  'images', 'rating', 'current_checkins',
+                  'rating', 'current_checkins',
         )
 
 class MiniBarCheckinSerializer(serializers.ModelSerializer):

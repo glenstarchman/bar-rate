@@ -5,7 +5,7 @@ from django.db import models
 from .base import *
 
 
-class Taggable(BarRateModel):
+class Taggable(BarRateTimestampModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -41,7 +41,6 @@ class Dislike(Taggable):
         unique_together = ['user', 'content_type', 'object_id']
         ordering = ["-created_at"]
 
-from .base import BarRateTaggableModel
 class Comment(Taggable):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -108,4 +107,21 @@ class Bookmark(Taggable):
         ]
 
         unique_together = ['user', 'content_type', 'object_id']
+        ordering = ["-created_at"]
+
+class Review(Taggable):
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    review_text = models.TextField()
+    rating = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        db_table = "review"
+        indexes = [
+            models.Index(fields = ['object_id']),
+            models.Index(fields = ['created_at']),
+        ]
         ordering = ["-created_at"]

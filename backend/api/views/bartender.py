@@ -7,16 +7,16 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from .base import build_response
 from ..util import Pagination
+from .taggable import TaggableViewSet
 
 
-class BartenderViewSet(viewsets.ViewSet):
+class BartenderViewSet(TaggableViewSet):
 
     queryset = Bar.objects.all()
     pagination_class = Pagination
     paginate_by = 1
     paginate_by_param = 'page_size'
     max_paginate_by = 30
-
 
     def list(self, request):
         pass

@@ -4,7 +4,6 @@ from ..serializers import *
 from ..models import Bar, User
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework import viewsets
 from .base import build_response
 from ..util import Pagination
 from ..util.truthy import is_true
@@ -64,8 +63,8 @@ def build_barmeta_update(request, data, bar_meta):
 
     return bar_meta
 
-
-class BarViewSet(viewsets.ViewSet):
+from .taggable import TaggableViewSet
+class BarViewSet(TaggableViewSet):
 
     queryset = Bar.objects.all()
     pagination_class = Pagination
@@ -177,13 +176,4 @@ class BarViewSet(viewsets.ViewSet):
         checkin.comment = body.get('comment', None)
         checkin.save()
         serializer = BarCheckinSerializer(instance=checkin)
-        return build_response(request, serializer.data)
-
-
-    @action(detail=True,  methods=['get',])
-    def reviews(self, request, pk=None):
-        """get reviews for a bar"""
-        queryset = BarReview.objects.filter(bar=pk)\
-                                     .order_by('-created_at')
-        serializer = BarReviewSerializer(queryset, many=True)
         return build_response(request, serializer.data)
