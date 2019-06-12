@@ -10,7 +10,7 @@ import json
 
 from .base import *
 from .user import User
-from .lookups import Gender, MusicGenre, BarType, AgeGroup
+from .lookups import *
 from .bar import Bar
 from .bartender import Bartender
 
@@ -33,6 +33,7 @@ class Profile(BarRateTaggableModel):
     favorite_bar_types = models.ManyToManyField(BarType, related_name='favorite_bar_types')
     image = models.URLField(null=True, blank=True)
     birthdate = models.DateField(null=True, blank=True)
+    relationship_status = models.ForeignKey(RelationshipStatus, null=True, blank=True, on_delete=models.CASCADE)
 
 
 

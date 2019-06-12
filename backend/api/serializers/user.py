@@ -4,9 +4,7 @@ from ..models.user import User
 from ..models.profile import Profile
 from .bartender import MiniBartenderSerializer
 from .mini_serializers import MiniBarSerializer, MiniUserSerializer
-from .lookups import (AgeGroupSerializer,
-                GenderSerializer, MusicGenreSerializer,
-                AgeGroupSerializer, BarTypeSerializer)
+from .lookups import *
 from .taggable_serializer import TaggableSerializer
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -28,6 +26,7 @@ class FullProfileSerializer(TaggableSerializer):
     interested_in_genders = GenderSerializer(many=True)
     interested_in_age_groups = AgeGroupSerializer(many=True)
     favorite_bar_types = BarTypeSerializer(many=True)
+    relationship_status = RelationshipStatusSerializer()
 
     class Meta:
         model = Profile
@@ -37,7 +36,7 @@ class FullProfileSerializer(TaggableSerializer):
             'favorite_bars', 'favorite_bartenders',
             'favorite_music_genres', 'interested_in_genders',
             'interested_in_age_groups', 'favorite_bar_types',
-            'image', 'birthdate',
+            'image', 'birthdate', 'relationship_status'
         ]
 
 

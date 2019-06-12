@@ -60,3 +60,10 @@ class BarTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BarType
         fields = ('id', 'name',)
+
+class RelationshipStatusSerializer(serializers.ModelSerializer):
+
+    id = HashidSerializerCharField()
+    class Meta:
+        model = RelationshipStatus
+        fields = ('id', 'name',)

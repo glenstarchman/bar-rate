@@ -1,6 +1,16 @@
 from django.contrib.gis.db import models
 from .base import BarRateModel
 
+RELATIONSHIP_STATUS = [
+    'Single',
+    'Married',
+    "It's Complicated",
+    "Separated",
+    "Divorved",
+    "In a Civil Union",
+    "Polyamorous",
+]
+
 GENDERS = [
     'Man',
     'Woman',
@@ -163,4 +173,14 @@ class BarInfo(BarRateModel):
 class Neighborhood(BarRateModel):
     city = models.CharField(max_length=200)
     state_or_province = models.CharField(max_length=100)
+    country = models.CharField(max_length=3, default='USA')
     name = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "neighborhood"
+
+class RelationshipStatus(BarRateModel):
+    name = models.CharField(max_length=60)
+
+    class Meta:
+        db_table = "relationship_status"
