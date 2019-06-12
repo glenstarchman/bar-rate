@@ -292,7 +292,11 @@ class BarRateTaggableModel(BarRateModel):
             review_text=review_text, rating=rating)
 
     def add_follower(self, user):
-        self.following.create(user=user, content_object=self)
+        if self.followers.filter(user=user).count() > 0:
+            #unfollow
+            self.followers.filter(user=user).delete()
+        else:
+            self.followers.create(user=user, content_object=self)
 
     def remove_follower(self, user):
         try:

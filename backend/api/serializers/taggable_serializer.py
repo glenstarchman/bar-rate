@@ -45,6 +45,13 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ('url',)
 
 
+class FollowerSerializer(serializers.ModelSerializer):
+    user = MiniUserSerializer()
+
+    class Meta:
+        model = Follower
+        fields = ('user',)
+
 class TaggableSerializer(serializers.ModelSerializer):
     """base serializer for all taggable models"""
 

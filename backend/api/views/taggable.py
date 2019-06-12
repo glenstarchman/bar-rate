@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from .base import build_response
 from ..util import Pagination
 from ..serializers.taggable_serializer import *
+from ..serializers.user import MiniUserSerializer
 
 
 class TaggableViewSet(viewsets.ViewSet):
@@ -56,6 +57,10 @@ class TaggableViewSet(viewsets.ViewSet):
     def images(self, request, pk=None):
         return self.get_taggable(request, pk, ImageSerializer)
 
+    @action(detail=True, methods=['get'])
+    def followers(self, request, pk=None):
+        return self.get_taggable(request, pk, FollowerSerializer)
+
 
     def toggle_with_body(self, request, pk=None):
         """either set or unset a taggable item"""
@@ -99,4 +104,8 @@ class TaggableViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['post'])
     def tag(self, request, pk=None):
+        return self.toggle_with_body(request, pk)
+
+    @action(detail=True, methods=['post'])
+    def follower(self, request, pk=None):
         return self.toggle_with_body(request, pk)
