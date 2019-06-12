@@ -8,7 +8,7 @@ from rest_framework import viewsets
 from .base import build_response
 from ..util import Pagination
 from .taggable import TaggableViewSet
-from  ..serializers.user import FullProfileSerializer
+from  ..serializers.user import UserSerializer
 
 class UserViewSet(TaggableViewSet):
 
@@ -25,5 +25,5 @@ class UserViewSet(TaggableViewSet):
     def retrieve(self, request, pk=None):
         queryset = User.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = FullProfileSerializer(user.profile)
+        serializer = UserSerializer(user)
         return build_response(request, serializer.data)

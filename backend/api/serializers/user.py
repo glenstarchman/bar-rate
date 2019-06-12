@@ -18,7 +18,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class FullProfileSerializer(TaggableSerializer):
     id = HashidSerializerCharField()
-    user = MiniUserSerializer()
+    #user = MiniUserSerializer()
     gender = GenderSerializer()
     favorite_bars = MiniBarSerializer(many=True)
     favorite_bartenders = MiniBartenderSerializer(many=True)
@@ -31,7 +31,7 @@ class FullProfileSerializer(TaggableSerializer):
     class Meta:
         model = Profile
         fields = TaggableSerializer.Meta.fields + [
-            'user', 'gender', 'timezone', 'image', 'headline', 'blurb',
+            'gender', 'timezone', 'image', 'headline', 'blurb',
             'city', 'state_province',
             'favorite_bars', 'favorite_bartenders',
             'favorite_music_genres', 'interested_in_genders',
@@ -43,6 +43,7 @@ class FullProfileSerializer(TaggableSerializer):
 class UserSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField()
     current_checkin = serializers.SerializerMethodField()
+    profile = FullProfileSerializer()
 
     def get_current_checkin(self, instance):
         from .bar import MiniBarCheckinSerializer

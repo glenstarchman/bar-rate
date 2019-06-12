@@ -265,6 +265,9 @@ class BarRateTaggableModel(BarRateModel):
         return self.reviews.count()
 
     def add_like(self, user):
+
+        id = decode(self.id)
+        ct = self._ct()
         if self.likes.filter(user=user).count() > 0:
             self.remove_like(user)
         else:
@@ -302,7 +305,7 @@ class BarRateTaggableModel(BarRateModel):
         try:
             id = decode(self.id)
             ct = self._ct()
-            self.following.get(
+            self.following.filtert(
                 user=user, content_type=ct, object_id=id).delete()
         except:
             pass
