@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from .base import build_response
 from ..util import Pagination
 from ..serializers.taggable_serializer import *
-from ..serializers.user import MiniUserSerializer
+from ..serializers.mini_serializers import MiniUserSerializer
 
 
 class TaggableViewSet(viewsets.ViewSet):

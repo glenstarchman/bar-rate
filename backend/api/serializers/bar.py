@@ -1,45 +1,11 @@
 from rest_framework import serializers
 from hashid_field.rest import HashidSerializerCharField
 from ..models import *
-from .user import MiniUserSerializer
+from .lookups import *
 from .taggable_serializer import TaggableSerializer
+from .mini_serializers import *
 
 
-class MoodSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    class Meta:
-        model = Mood
-        fields = ('id', 'name',)
-
-class DoingSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    class Meta:
-        model = Doing
-        fields = ('id', 'name',)
-
-class FeelingSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-
-    class Meta:
-        model = Feeling
-        fields = ('id', 'name',)
-
-class AtmosphereSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    class Meta:
-        model = Atmosphere
-        fields = ('id', 'name',)
-
-class AgeGroupSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    class Meta:
-        model = AgeGroup
-        fields = ('id', 'name')
 
 class BarInfoSerializer(serializers.ModelSerializer):
 
@@ -67,12 +33,6 @@ class BarHourSerializer(serializers.ModelSerializer):
         model = BarHours
         fields = ('id', 'day_of_week', 'open', 'close',)
 
-class BarTypeSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    class Meta:
-        model = BarType
-        fields = ('id', 'name',)
 
 
 class BarMetaSerializer(serializers.ModelSerializer):
@@ -153,34 +113,3 @@ class BarCreateSerializer(serializers.ModelSerializer):
         fields = ('name', 'address1', 'address2', 'city',
                 'state_province', 'country', 'phone',
                 'email',)
-
-class BarMiniSerializer(serializers.ModelSerializer):
-
-    id = HashidSerializerCharField()
-    location = serializers.ReadOnlyField()
-    current_checkins = BarCheckinSerializer(many=True)
-    #hours = BarHourSerializer(many=True)
-
-    class Meta:
-        model = Bar
-
-        fields = ('id', 'name', 'location',
-                  'address1', 'address2', 'city',
-                  'state_province', 'postal_code', 'country',
-                  'phone', 'email',
-                  'total_checkins',
-                  'rating', 'current_checkins',
-        )
-
-class MiniBarCheckinSerializer(serializers.ModelSerializer):
-
-    bar = BarMiniSerializer()
-    mood = MoodSerializer()
-    doing = DoingSerializer()
-    feeling = FeelingSerializer()
-    created_at = serializers.DateTimeField(required=False)
-
-    class Meta:
-        model = BarCheckin
-        fields = ('bar', 'comment', 'mood', 'doing',
-                  'feeling', 'created_at', )

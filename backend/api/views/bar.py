@@ -10,7 +10,7 @@ from ..util.truthy import is_true
 
 
 SEARCHABLE_FIELDS = (
-    'name', 'location', 'city',
+    'name', 'city',
 )
 
 

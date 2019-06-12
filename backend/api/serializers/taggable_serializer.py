@@ -1,12 +1,20 @@
 from rest_framework import serializers
 from hashid_field.rest import HashidSerializerCharField
-from .user import MiniUserSerializer
+from ..models.user import User
 from ..models.taggable import *
+
+
+class TaggableUserSerializer(serializers.ModelSerializer):
+    id = HashidSerializerCharField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'username',)
 
 
 class CommentSerializer(serializers.ModelSerializer):
 
-    user = MiniUserSerializer()
+    user = TaggableUserSerializer()
     class Meta:
         model = Comment
         fields = ('user', 'created_at', 'comment_text',)
@@ -14,25 +22,27 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
 
-    user = MiniUserSerializer()
+    user = TaggableUserSerializer()
     class Meta:
         model = Tag
         fields = ('user', 'created_at', 'tag_text',)
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = MiniUserSerializer()
+    user = TaggableUserSerializer()
     class Meta:
         model = Like
         fields = ('user', 'created_at',)
 
 class DislikeSerializer(serializers.ModelSerializer):
-    user = MiniUserSerializer()
+
+    user = TaggableUserSerializer()
+
     class Meta:
         model = Like
         fields = ('user', 'created_at',)
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = MiniUserSerializer()
+    user = TaggableUserSerializer()
     class Meta:
         model = Review
         fields = ('user', 'review_text', 'rating', 'created_at',)
@@ -46,7 +56,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class FollowerSerializer(serializers.ModelSerializer):
-    user = MiniUserSerializer()
+
+    user = TaggableUserSerializer()
 
     class Meta:
         model = Follower
