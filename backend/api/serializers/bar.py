@@ -170,3 +170,16 @@ class BarMiniSerializer(serializers.ModelSerializer):
                   'total_checkins',
                   'images', 'rating', 'current_checkins',
         )
+
+class MiniBarCheckinSerializer(serializers.ModelSerializer):
+
+    bar = BarMiniSerializer()
+    mood = MoodSerializer()
+    doing = DoingSerializer()
+    feeling = FeelingSerializer()
+    created_at = serializers.DateTimeField(required=False)
+
+    class Meta:
+        model = BarCheckin
+        fields = ('bar', 'comment', 'mood', 'doing',
+                  'feeling', 'created_at', )

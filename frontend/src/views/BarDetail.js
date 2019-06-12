@@ -1,6 +1,6 @@
 import React from 'react';
 import BaseView from './Base.js';
-import {callApi} from '../common/fetcher.js';
+import {getBar} from '../services/bar.service.js';
 import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
 
 export default class Bar extends BaseView {
@@ -8,8 +8,7 @@ export default class Bar extends BaseView {
 
   componentDidMount() {
     const id = this.navigation.getParam('id', 'NO-ID');
-    let url = 'bar/' + id.toString();
-    return callApi(url, 'GET', null)
+    return getBar(id)
       .then((responseJson) => {
         this.setState({
           isLoading: false,
@@ -24,7 +23,6 @@ export default class Bar extends BaseView {
 
   realRender() {
     const data = this.state.dataSource[0];
-    console.log(data);
     return (
         <View style={{flex: 1 , paddingTop:20}}>
           <Text>This is info for {data.name}</Text>

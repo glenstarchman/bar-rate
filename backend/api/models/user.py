@@ -128,6 +128,7 @@ class CustomUserManager(BaseUserManager, BarRateManager):
 
 class User(UserBase, BarRateTaggableModel):
 
+    id = HashidAutoField(allow_int_lookup=True, primary_key=True)
     username = models.CharField(_('user name'), max_length=254, unique=True)
     email = models.EmailField(_('email address'), max_length=254, unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
@@ -143,7 +144,6 @@ class User(UserBase, BarRateTaggableModel):
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    contract_uploader = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -175,11 +175,6 @@ class User(UserBase, BarRateTaggableModel):
         if user:
             user.set_password(new_password)
             user.save()
-
-    @property
-    def organization(self):
-        from .organization import OrganizationUser
-        return OrganizationUser.objects.get(user=self).organization
 
     def __repr__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -289,6 +284,27 @@ class User(UserBase, BarRateTaggableModel):
     def user_comments(self):
         """retrieve a list of all comments BY this user"""
         return self.__sort(Comment.objects.filter(user=self))
+
+
+    @property
+    def user_comments_count(self):
+        return Comment.objects.filter(user=self).count()
+
+
+    @property
+    def current_checkin(self):
+        from .bar import BarCheckin
+        now = timezone.now()
+        long_time = now - timedelta(hours=4)
+
+        try:
+            qs = BarCheckin.objects.get(
+                Q(user=self) &
+                (Q(created_at__gte=long_time) & Q(checkout__isnull=True))
+            )
+            return qs
+        except Exception as e:
+            return None
 
     @property
     def recent_user_likes(self, days=7):

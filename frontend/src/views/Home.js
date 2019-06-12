@@ -42,6 +42,7 @@ class Home extends Base {
         </Text>
         <Button onPress={() => this.navigate('Bartender', {id: 1})} title="Bartender" />
         <Button onPress={() => this.navigate('Bar', {id: 1})} title="Bar" />
+        <Button onPress={() => this.navigate('Profile', {id: 1})} title="Profile" />
       </View>
     );
   }
