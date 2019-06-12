@@ -56,12 +56,6 @@ class TaggableViewSet(viewsets.ViewSet):
     def images(self, request, pk=None):
         return self.get_taggable(request, pk, ImageSerializer)
 
-    @action(detail=True, methods=['post'])
-    def like(self, request, pk=None):
-        user = request.user
-        obj = get_object_or_404(self.queryset, pk=pk)
-        obj.add_like(user=user)
-        return build_response(request, self.SUCCESS)
 
     def toggle_with_body(self, request, pk=None):
         """either set or unset a taggable item"""

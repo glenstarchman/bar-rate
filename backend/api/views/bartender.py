@@ -12,7 +12,7 @@ from .taggable import TaggableViewSet
 
 class BartenderViewSet(TaggableViewSet):
 
-    queryset = Bar.objects.all()
+    queryset = Bartender.objects.all()
     pagination_class = Pagination
     paginate_by = 1
     paginate_by_param = 'page_size'
