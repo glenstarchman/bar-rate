@@ -5,7 +5,6 @@ from ..models.taggable import *
 from ..models.bar import Bar
 from ..models.bartender import Bartender
 
-
 class ReprMixin(object):
 
     def get_obj(self, obj):
@@ -28,6 +27,15 @@ class ReprMixin(object):
         d = serializer(instance=o).data
         d['type'] = obj_type
         return d
+
+
+class TaggableSerializer(serializers.ModelSerializer, ReprMixin):
+
+    def __init__(self, *args, **kwargs):
+        if 'user_only' in kwargs:
+            self.user_only = True
+            kwargs.pop('user_only')
+        super(TaggableSerializer, self).__init__(*args, **kwargs)
 
 
 class TaggableUserSerializer(serializers.ModelSerializer):
@@ -93,7 +101,7 @@ class FollowerSerializer(serializers.ModelSerializer, ReprMixin):
 
     class Meta:
         model = Follower
-        fields = ('user', 'obj',)
+        fields = ('user', 'obj', 'created_at')
 
 class TaggableSerializer(serializers.ModelSerializer):
     """base serializer for all taggable models"""
@@ -106,7 +114,6 @@ class TaggableSerializer(serializers.ModelSerializer):
     recent_images = ImageSerializer(many=True, required=False)
     recent_followers = FollowerSerializer(many=True, required=False)
     recent_following = FollowerSerializer(many=True, required=False)
-
 
     class Meta:
         model = None

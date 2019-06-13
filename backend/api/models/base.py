@@ -198,16 +198,11 @@ class BarRateTaggableModel(BarRateModel):
     reviews = GenericRelation('Review', related_name='reviews')
     images = GenericRelation('Image', related_name='images')
 
-
     @property
     def followers(self):
         from .taggable import Follower
         ctype = ContentType.objects.get(model='user')
-        return Follower.objects.filter(content_type=ctype, object_id=self.id)
-
-    @property
-    def recent_followers(self):
-        return self._get_recent(self.comments, count, start)
+        return Follower.objects.filter(content_type=self._ct(), object_id=self.id)
 
     @property
     def recent_comments(self, count=settings.TAGGABLE_COUNT, start=0):
@@ -302,6 +297,7 @@ class BarRateTaggableModel(BarRateModel):
             review_text=review_text, rating=rating)
 
     def add_follower(self, user):
+        print("adding follower")
         if self.followers.filter(user=user).count() > 0:
             #unfollow
             self.followers.filter(user=user).delete()

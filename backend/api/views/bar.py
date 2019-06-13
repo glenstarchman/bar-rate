@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404
 from ..serializers import *
+from ..serializers.bar import BarSerializer
 from ..models import Bar, User
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -97,7 +98,7 @@ class BarViewSet(TaggableViewSet):
         args = {**args, **meta_args}
 
         if args:
-            queryset = queryset.filter(**args)
+          queryset = queryset.filter(**args)
 
         serializer = BarMiniSerializer(queryset, many=True)
         return build_response(request, serializer.data)

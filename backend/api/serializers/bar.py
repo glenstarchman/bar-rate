@@ -97,11 +97,12 @@ class BarSerializer(TaggableSerializer):
 
     class Meta:
         model = Bar
-        fields = TaggableSerializer.Meta.fields + ['id', 'name', 'location', 'address1', 'address2', 'city',
-                  'state_province', 'postal_code', 'country',
-                  'phone', 'email', 'hours', 'meta', 'happy_hour',
-                  'popular_hours', 'total_checkins',
-                  'current_checkins', 'other_names', 'rating',
+        fields = TaggableSerializer.Meta.fields + [
+            'id', 'name', 'location', 'address1', 'address2', 'city',
+            'state_province', 'postal_code', 'country',
+            'phone', 'email', 'hours', 'meta', 'happy_hour',
+            'popular_hours', 'total_checkins',
+            'current_checkins', 'other_names', 'rating',
        ]
 
 

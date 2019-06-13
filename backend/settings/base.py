@@ -6,7 +6,7 @@ import socket
 HOST_NAME=socket.gethostname()
 if HOST_NAME == 'bar-rate-prod':
     MODE = 'production'
-    DEBUG = FalseOB
+    DEBUG = False
     SITE_URL = "https://bar-rate.com"
 else:
     MODE = 'development'
@@ -267,3 +267,8 @@ else:
 TAGGABLE_COUNT = 25
 
 HASHID_FIELD_ALLOW_INT_LOOKUP = True
+
+INTERNAL_IPS =  (
+    '127.0.0.0.1',
+
+)

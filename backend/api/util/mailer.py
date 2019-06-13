@@ -48,52 +48,6 @@ def send_welcome(user):
         'style': style,
         'welcome_url': SITE_URL,
     }
-    subject = "Welcome to In The Cloud Contracts"
+    subject = "Welcome!"
 
     return send_with_template(to, subject, template, context, from_email)
-
-
-def send_invite(invite):
-    template = 'email/invite_user.html'
-    to = invite.email
-    invited_by = invite.invited_by
-    from_email = settings.DEFAULT_MAIL_FROM
-    #from_email = invited_by.email
-    f = open(os.path.join(ASSET_DIR, 'index.styles.css'), 'r')
-    style = f.read()
-    f.close()
-    context = {
-        'invite': invite,
-        'invited_by': invite.invited_by,
-        'style': style,
-        'site_url': SITE_URL,
-        'invite_url': "%s/register?invite_code=%s" % (SITE_URL, invite.invite_code)
-    }
-    subject = "You're invited to InTheCloudContracts"
-
-    #subject = '%s %s has invited you to ITCC' % (
-    #    invited_by.first_name, invited_by.last_name)
-
-    return send_with_template(to, subject, template, context, from_email)
-
-
-def send_invite_request(admin, request):
-    template = 'email/invite_request_user.html'
-    to = admin.email
-    from_email = settings.DEFAULT_MAIL_FROM
-
-    context = {
-        'admin': admin,
-        'request': request,
-        'site_url': SITE_URL,
-    }
-    subject = '%s %s has requested to join the %s organization on ITCC' % (
-        request.user.first_name, request.user.last_name,
-        request.organization.name)
-
-    return send_with_template([to], subject, template, context, from_email)
-
-
-def send_welcome_email(user):
-    """send a welcome email to the customer with a link to their profile info"""
-    pass

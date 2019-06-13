@@ -1,17 +1,21 @@
 from django.contrib.gis.db import models
 from django.db.models import Q, Sum, Avg
 from django.utils import timezone
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 from hashid_field import HashidAutoField
 from datetime import timedelta
 from .base import BarRateModel, BarRateTaggableModel
 from .lookups import *
 from .user import User
+from ..util.geo import get_loc_from_address
 
 
 class Bar(BarRateTaggableModel):
     id = HashidAutoField(allow_int_lookup=True, primary_key=True)
     name = models.CharField(max_length=255)
-    location = models.PointField(null=True, blank=True)
+    location = models.PointField(spatial_index=True, null=True,
+                                 blank=True, geography=True)
     address1 = models.CharField(max_length=100)
     address2 = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100)
@@ -245,3 +249,20 @@ def image_upload_path(instance, filename):
 class BarImage(BarRateTaggableModel):
     bar = models.ForeignKey(Bar, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=image_upload_path, max_length=255)
+
+
+
+@receiver(pre_save, sender=Bar)
+def set_location(sender, instance, created=False, **kwawgs):
+    # get the location as a geometric point
+    if not instance.address2:
+        instance.address2 = ''
+
+    if not instance.postal_code:
+        instance.postal_code = ''
+    address = "%s %s, %s, %s %s " % (instance.address1,
+                                     instance.address2, instance.city,
+                                     instance.state_province,
+                                     instance.postal_code)
+    loc = get_loc_from_address(address)
+    instance.location = loc

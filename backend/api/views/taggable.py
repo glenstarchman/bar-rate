@@ -33,6 +33,7 @@ class TaggableViewSet(viewsets.ViewSet):
         #determine which method to call
         path = self._get_endpoint(request)
         qs = getattr(obj, path)
+        print(qs.query)
         ser = serializer(qs, many=True)
         return build_response(request, ser.data)
 
@@ -70,7 +71,7 @@ class TaggableViewSet(viewsets.ViewSet):
             body = json.loads(body_unicode)
         else:
             body = {}
-        #now detemine which add_* method to call
+        #now determine which add_* method to call
         #note that in the case of like/dislike
         #the add function actually deletes, go figure
         body['user'] = user
@@ -83,8 +84,6 @@ class TaggableViewSet(viewsets.ViewSet):
         else:
             func()
         return build_response(request, self.SUCCESS)
-
-
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):

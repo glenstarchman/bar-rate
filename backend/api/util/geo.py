@@ -7,7 +7,6 @@ from pygeocoder import Geocoder
 import geocoder
 from django.contrib.gis.geos import Point
 import time
-from ..models.locations import Location
 
 bearings = [0, 90, 180, 270]
 geo = Geocoder(api_key=settings.GOOGLE_API_KEY)
@@ -56,10 +55,10 @@ def get_loc_center(location):
 
 def get_loc_from_address(address, count=0):
     # check location table first
-    matches = Location.objects.filter(city=normalize_city_str(address))
-    if matches.count() > 0:
-        match = matches[0]
-        return Point(float(match.lng), float(match.lat))
+    #matches = Location.objects.filter(city=normalize_city_str(address))
+    #if matches.count() > 0:
+    #    match = matches[0]
+    #    return Point(float(match.lng), float(match.lat))
 
     # we attempt up to 5 times to get the geocoded address
     if count == 5:
@@ -71,7 +70,7 @@ def get_loc_from_address(address, count=0):
         # store for later
         n = normalize_city_str(address)
         p = Point(lng, lat)
-        Location.objects.create(city=n, lat=lat, lng=lng, location=p)
+        #Location.objects.create(city=n, lat=lat, lng=lng, location=p)
         return Point(float(lng), float(lat))
     except Exception as e:
         time.sleep(1)
@@ -89,7 +88,7 @@ def get_client_ip(request):
 
 
 def get_loc(ip):
-    matches = Location.objects.filter(ip=ip)
+    #matches = Location.objects.filter(ip=ip)
     if matches.count() > 0 and matches[0].city:
         match = matches[0]
         c = normalize_city(match.city)
@@ -137,11 +136,11 @@ def normalize_address(address):
     state = _extract(g, 'administrative_area_level_1')
     zipcode = _extract(g, 'postal_code')
     street_address1 = '%s %s' % (street_number, street)
-    street_address2 = subpremise
+    #street_address2 = subpremise
 
     return {
         'street_address1': street_address1,
-        'street_address2': street_address2,
+        #'street_address2': street_address2,
         'city': city,
         'state': state,
         'zipcode': zipcode
