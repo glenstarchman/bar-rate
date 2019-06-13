@@ -33,12 +33,15 @@ class TaggableViewSet(viewsets.ViewSet):
         #determine which method to call
         path = self._get_endpoint(request)
         qs = getattr(obj, path)
-        print(qs.query)
         ser = serializer(qs, many=True)
         return build_response(request, ser.data)
 
+
+    def delete_taggable(self, request):
+        """delete a taggable, other than like"""
+
     @action(detail=True, methods=['get'])
-    def likes(self, request, pk=None):
+    def likes(self, request, pk=None, id=None):
         return self.get_taggable(request, pk, LikeSerializer)
 
 

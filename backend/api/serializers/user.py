@@ -49,6 +49,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
                   'email', 'password',)
 
 
+class UserSettingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserSetting
+        fields = ('show_fullname', 'show_image', 'notifications',
+                  'show_followers',)
+
+
 class AuthTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -60,11 +68,12 @@ class LoginUserSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField()
     auth_token = AuthTokenSerializer()
     profile = ProfileSerializer()
+    settings = UserSettingSerializer()
 
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name',
-                  'profile', 'auth_token',)
+                  'profile', 'settings', 'auth_token',)
 
 
 class UserSerializer(TaggableSerializer):

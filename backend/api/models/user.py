@@ -26,10 +26,15 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     """make sure the user has a token and a username"""
     if created:
         Token.objects.create(user=instance)
-    from .profile import Profile
-    #create a blank profile
-    p = Profile(user=instance)
-    p.save()
+        from .profile import Profile
+        #create a blank profile
+        p = Profile(user=instance)
+        p.save()
+        #create a blank user_settings
+        from .user_settings import UserSetting
+        us = UserSetting(user=instance)
+        us.save()
+
 
 
 
@@ -270,6 +275,10 @@ class User(UserBase, BarRateTaggableModel):
             like = Like(user=self, content_type=ct, object_id=id)
             like.save()
 
+
+    @property
+    def settings(self):
+        return self.usersetting_set.first()
 
     @property
     def user_likes(self):
