@@ -90,10 +90,10 @@ class BarCheckinSerializer(serializers.ModelSerializer):
 class BarSerializer(TaggableSerializer):
 
     id = HashidSerializerCharField()
-    location = serializers.ReadOnlyField()
     hours = BarHourSerializer(many=True)
     meta = BarMetaSerializer()
     current_checkins = BarCheckinSerializer(many=True)
+    location = PointSerializer(required=False)
 
     class Meta:
         model = Bar

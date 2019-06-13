@@ -7,7 +7,7 @@ from .lookups import *
 class MiniBarSerializer(serializers.ModelSerializer):
 
     id = HashidSerializerCharField()
-    location = serializers.ReadOnlyField()
+    location = PointSerializer()
     #current_checkins = BarCheckinSerializer(many=True)
     #hours = BarHourSerializer(many=True)
 

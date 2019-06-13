@@ -4,6 +4,16 @@ from ..models import *
 from .taggable_serializer import TaggableSerializer
 
 
+class PointSerializer(serializers.Serializer):
+    latitude = serializers.SerializerMethodField()
+    longitude = serializers.SerializerMethodField()
+
+    def get_latitude(self, point):
+        return point.x
+
+    def get_longitude(self, point):
+        return point.y
+
 class MoodSerializer(serializers.ModelSerializer):
 
     id = HashidSerializerCharField()
