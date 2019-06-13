@@ -26,6 +26,11 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     """make sure the user has a token and a username"""
     if created:
         Token.objects.create(user=instance)
+    from .profile import Profile
+    #create a blank profile
+    p = Profile(user=instance)
+    p.save()
+
 
 
 @receiver(pre_save, sender=settings.AUTH_USER_MODEL)

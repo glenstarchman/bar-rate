@@ -8,7 +8,8 @@ from rest_framework import viewsets
 from .base import build_response
 from ..util import Pagination
 from .taggable import TaggableViewSet
-from  ..serializers.user import UserSerializer
+from ..serializers.user import *
+from ..serializers.mini_serializers import MiniUserSerializer
 
 class UserViewSet(TaggableViewSet):
 
@@ -27,3 +28,19 @@ class UserViewSet(TaggableViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(user)
         return build_response(request, serializer.data)
+
+
+    def create(self, request):
+        """create a user. Will also create a user from social auth later"""
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        serializer = CreateUserSerializer(data=body)
+        serializer.is_valid(raise_exception=True)
+        user = User.objects.create_user(body['email'], password=body['password'],
+                                first_name=body['first_name'],
+                                last_name=body['last_name'],
+                                username=body['username'],
+                               )
+        print(user)
+        ser = LoginUserSerializer(user)
+        return build_response(request, ser.data)

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from hashid_field.rest import HashidSerializerCharField
 from ..models.user import User
 from ..models.profile import Profile
@@ -38,6 +39,32 @@ class FullProfileSerializer(serializers.ModelSerializer):
             'interested_in_age_groups', 'favorite_bar_types',
             'image', 'birthdate', 'relationship_status'
         ]
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username',
+                  'email', 'password',)
+
+
+class AuthTokenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Token
+        fields = ('key',)
+
+class LoginUserSerializer(serializers.ModelSerializer):
+
+    id = HashidSerializerCharField()
+    auth_token = AuthTokenSerializer()
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name',
+                  'profile', 'auth_token',)
 
 
 class UserSerializer(TaggableSerializer):
