@@ -101,6 +101,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
@@ -264,3 +265,5 @@ else:
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 TAGGABLE_COUNT = 25
+
+HASHID_FIELD_ALLOW_INT_LOOKUP = True

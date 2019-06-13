@@ -13,6 +13,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from django.apps import apps
+from hashid_field import Hashid
 from rest_framework.authtoken.models import Token
 from .base import *
 from .taggable import *
@@ -253,6 +254,18 @@ class User(UserBase, BarRateTaggableModel):
     def __sort(self, qs):
         return qs.order_by("-created_at")
 
+
+    def add_like(self, obj):
+        id = Hashid(obj.id).id
+        ct = obj._ct()
+        qs = Like.objects.filter(user=self, content_type=ct, object_id=id)
+        if qs.count() > 0:
+            qs.delete()
+        else:
+            like = Like(user=self, content_type=ct, object_id=id)
+            like.save()
+
+
     @property
     def user_likes(self):
         """retrieve a list of all likes OF of this user"""
@@ -285,10 +298,14 @@ class User(UserBase, BarRateTaggableModel):
         """retrieve a list of all comments BY this user"""
         return self.__sort(Comment.objects.filter(user=self))
 
-
     @property
     def user_comments_count(self):
         return Comment.objects.filter(user=self).count()
+
+
+    @property
+    def user_reviews(self):
+        return Review.objects.filter(user=self)
 
 
     @property
@@ -325,6 +342,11 @@ class User(UserBase, BarRateTaggableModel):
     def mutual_followers(self, user_id):
         """get the mutual followers between two users"""
         pass
+
+
+    @property
+    def recent_user_reviews(self, days=7):
+        return self._get_recent(self.user_reviews, days)
 
     def mutual_followers_count(self, user_id):
         return self.mutual_followers(user_id).count()

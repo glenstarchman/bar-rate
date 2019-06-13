@@ -2,6 +2,32 @@ from rest_framework import serializers
 from hashid_field.rest import HashidSerializerCharField
 from ..models.user import User
 from ..models.taggable import *
+from ..models.bar import Bar
+from ..models.bartender import Bartender
+
+
+class ReprMixin(object):
+
+    def get_obj(self, obj):
+        from .mini_serializers import (MiniBarSerializer, MiniUserSerializer)
+        from .bartender import MiniBartenderSerializer
+        o = obj.content_object
+        serializer = None
+        obj_type = None
+        if isinstance(o, Bar):
+            serializer = MiniBarSerializer
+            obj_type = 'bar'
+        elif isinstance(o, Bartender):
+            serializer = MiniBartenderSerializer
+            obj_type = 'bartender'
+        elif isinstance(o, User):
+            serializer = MiniUserSerializer
+            obj_type = 'user'
+
+
+        d = serializer(instance=o).data
+        d['type'] = obj_type
+        return d
 
 
 class TaggableUserSerializer(serializers.ModelSerializer):
@@ -12,12 +38,12 @@ class TaggableUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'username',)
 
 
-class CommentSerializer(serializers.ModelSerializer):
-
+class CommentSerializer(serializers.ModelSerializer, ReprMixin):
     user = TaggableUserSerializer()
+    obj = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ('user', 'created_at', 'comment_text',)
+        fields = ('user', 'created_at', 'comment_text', 'obj')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -27,11 +53,15 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('user', 'created_at', 'tag_text',)
 
-class LikeSerializer(serializers.ModelSerializer):
+class LikeSerializer(serializers.ModelSerializer, ReprMixin):
+
     user = TaggableUserSerializer()
+    obj = serializers.SerializerMethodField()
+
+
     class Meta:
         model = Like
-        fields = ('user', 'created_at',)
+        fields = ('user', 'created_at', 'obj',)
 
 class DislikeSerializer(serializers.ModelSerializer):
 
@@ -41,11 +71,12 @@ class DislikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = ('user', 'created_at',)
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer, ReprMixin):
     user = TaggableUserSerializer()
+    obj = serializers.SerializerMethodField()
     class Meta:
         model = Review
-        fields = ('user', 'review_text', 'rating', 'created_at',)
+        fields = ('user', 'review_text', 'rating', 'created_at', 'obj')
 
 
 class ImageSerializer(serializers.ModelSerializer):

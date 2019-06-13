@@ -5,7 +5,7 @@ from ..models.profile import Profile
 from .bartender import MiniBartenderSerializer
 from .mini_serializers import MiniBarSerializer, MiniUserSerializer
 from .lookups import *
-from .taggable_serializer import TaggableSerializer
+from .taggable_serializer import *
 
 class ProfileSerializer(serializers.ModelSerializer):
     gender = GenderSerializer()
@@ -16,7 +16,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 
-class FullProfileSerializer(TaggableSerializer):
+class FullProfileSerializer(serializers.ModelSerializer):
     id = HashidSerializerCharField()
     #user = MiniUserSerializer()
     gender = GenderSerializer()
@@ -30,8 +30,8 @@ class FullProfileSerializer(TaggableSerializer):
 
     class Meta:
         model = Profile
-        fields = TaggableSerializer.Meta.fields + [
-            'gender', 'timezone', 'image', 'headline', 'blurb',
+        fields = [
+            'id', 'gender', 'timezone', 'image', 'headline', 'blurb',
             'city', 'state_province',
             'favorite_bars', 'favorite_bartenders',
             'favorite_music_genres', 'interested_in_genders',
@@ -40,10 +40,13 @@ class FullProfileSerializer(TaggableSerializer):
         ]
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(TaggableSerializer):
     id = HashidSerializerCharField()
     current_checkin = serializers.SerializerMethodField()
     profile = FullProfileSerializer()
+    recent_user_likes = LikeSerializer(many=True)
+    recent_user_reviews = ReviewSerializer(many=True)
+    recent_user_comments = CommentSerializer(many=True)
 
     def get_current_checkin(self, instance):
         from .bar import MiniBarCheckinSerializer
@@ -51,6 +54,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name',
-                  'profile', 'user_likes_count', 'user_dislikes_count',
-                  'user_comments_count', 'current_checkin', )
+        fields = TaggableSerializer.Meta.fields + [
+            'id', 'username', 'first_name', 'last_name',
+            'profile', 'user_likes_count', 'user_dislikes_count',
+            'user_comments_count', 'current_checkin',
+            'recent_user_likes', 'recent_user_reviews',
+            'recent_user_comments',
+        ]

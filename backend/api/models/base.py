@@ -114,7 +114,7 @@ class BarRateTimestampModel(models.Model):
     #def _get_recent(self, qs, delta=timedelta(days=7)):
     #    if not isinstance(delta, timedelta):
     #        delta = timedelta(days=delta)
-    #    return qs.filter(created_at__gte=timezone.now() - delta)
+    #    return qs.filter(created_at__gte=timezone.now() - delta):5]
 
     #for pagination
     def _get_recent(self, qs, count=settings.TAGGABLE_COUNT, start=0):
@@ -264,16 +264,6 @@ class BarRateTaggableModel(BarRateModel):
     def review_count(self):
         return self.reviews.count()
 
-    def add_like(self, user):
-
-        id = decode(self.id)
-        ct = self._ct()
-        if self.likes.filter(user=user).count() > 0:
-            self.remove_like(user)
-        else:
-            self.likes.create(
-                user=user, content_object=self)
-
     def add_dislike(self, user):
         try:
             self.remove_like(user)
@@ -290,7 +280,7 @@ class BarRateTaggableModel(BarRateModel):
             user=user, content_object=self, tag_text=tag_text)
 
     def add_review(self, user, review_text, rating=None):
-        self.tags.create(
+        self.reviews.create(
             user=user, content_object=self,
             review_text=review_text, rating=rating)
 
