@@ -59,5 +59,5 @@ class UserSerializer(TaggableSerializer):
             'profile', 'user_likes_count', 'user_dislikes_count',
             'user_comments_count', 'current_checkin',
             'recent_user_likes', 'recent_user_reviews',
-            'recent_user_comments',
+            'recent_user_comments', 'user_following_count', 'follower_count',
         ]

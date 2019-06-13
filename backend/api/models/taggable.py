@@ -83,9 +83,6 @@ class Follower(Taggable):
             models.Index(fields = ['created_at']),
         ]
 
-        unique_together = ['user', 'content_type', 'object_id']
-        ordering = ["-created_at"]
-
 class Image(Taggable):
 
     url = models.CharField(max_length = 1024)

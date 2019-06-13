@@ -86,13 +86,14 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ('url',)
 
 
-class FollowerSerializer(serializers.ModelSerializer):
+class FollowerSerializer(serializers.ModelSerializer, ReprMixin):
 
     user = TaggableUserSerializer()
+    obj = serializers.SerializerMethodField()
 
     class Meta:
         model = Follower
-        fields = ('user',)
+        fields = ('user', 'obj',)
 
 class TaggableSerializer(serializers.ModelSerializer):
     """base serializer for all taggable models"""
@@ -103,10 +104,15 @@ class TaggableSerializer(serializers.ModelSerializer):
     recent_comments = CommentSerializer(many=True, required=False)
     recent_reviews = ReviewSerializer(many=True, required=False)
     recent_images = ImageSerializer(many=True, required=False)
+    recent_followers = FollowerSerializer(many=True, required=False)
+    recent_following = FollowerSerializer(many=True, required=False)
+
 
     class Meta:
         model = None
         fields = ['id', 'recent_likes', 'recent_dislikes',
-                  'recent_comments', 'recent_reviews',
+                  'recent_comments', 'recent_reviews', 'recent_followers',
+                  'recent_following',
                   'recent_images', 'like_count', 'dislike_count',
-                  'comment_count', 'review_count', 'image_count',]
+                  'comment_count', 'review_count', 'image_count',
+                  'follower_count', 'following_count', 'recent_followers',]

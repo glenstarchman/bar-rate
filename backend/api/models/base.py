@@ -200,6 +200,16 @@ class BarRateTaggableModel(BarRateModel):
 
 
     @property
+    def followers(self):
+        from .taggable import Follower
+        ctype = ContentType.objects.get(model='user')
+        return Follower.objects.filter(content_type=ctype, object_id=self.id)
+
+    @property
+    def recent_followers(self):
+        return self._get_recent(self.comments, count, start)
+
+    @property
     def recent_comments(self, count=settings.TAGGABLE_COUNT, start=0):
         return self._get_recent(self.comments, count, start)
 
@@ -252,8 +262,15 @@ class BarRateTaggableModel(BarRateModel):
         return self.followers.count()
 
     @property
+    def following_count(self):
+        return self.following.count()
+
+    @property
     def image_count(self):
         return self.images.count()
+
+
+
 
 
     @property
