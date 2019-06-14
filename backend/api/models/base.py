@@ -264,10 +264,6 @@ class BarRateTaggableModel(BarRateModel):
     def image_count(self):
         return self.images.count()
 
-
-
-
-
     @property
     def tag_count(self):
         return self.tags.count()
@@ -297,7 +293,6 @@ class BarRateTaggableModel(BarRateModel):
             review_text=review_text, rating=rating)
 
     def add_follower(self, user):
-        print("adding follower")
         if self.followers.filter(user=user).count() > 0:
             #unfollow
             self.followers.filter(user=user).delete()

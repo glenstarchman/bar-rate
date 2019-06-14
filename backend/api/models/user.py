@@ -276,6 +276,8 @@ class User(UserBase, BarRateTaggableModel):
             like.save()
 
 
+
+
     @property
     def settings(self):
         return self.usersetting_set.first()

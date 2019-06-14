@@ -44,7 +44,6 @@ class TaggableViewSet(viewsets.ViewSet):
     def likes(self, request, pk=None, id=None):
         return self.get_taggable(request, pk, LikeSerializer)
 
-
     @action(detail=True, methods=['get'])
     def reviews(self, request, pk=None):
         return self.get_taggable(request, pk, ReviewSerializer)
