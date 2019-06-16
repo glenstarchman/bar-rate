@@ -279,6 +279,12 @@ class BarRateTaggableModel(BarRateModel):
         except:
             pass
 
+    def add_like(self, user):
+        self.likes.create(
+            user=user, content_object=self
+        )
+
+
     def add_comment(self, user, comment_text):
         self.comments.create(
             user=user, content_object=self, comment_text=comment_text)

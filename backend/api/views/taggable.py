@@ -36,9 +36,9 @@ class TaggableViewSet(viewsets.ViewSet):
         ser = serializer(qs, many=True)
         return build_response(request, ser.data)
 
-
     def delete_taggable(self, request):
         """delete a taggable, other than like"""
+        pass
 
     @action(detail=True, methods=['get'])
     def likes(self, request, pk=None, id=None):
@@ -110,3 +110,30 @@ class TaggableViewSet(viewsets.ViewSet):
     @action(detail=True, methods=['post'])
     def follower(self, request, pk=None):
         return self.toggle_with_body(request, pk)
+
+    def delete_lookup(self, request, obj_model, pk, taggable_pk):
+        main_obj = get_object_or_404(self.queryset, pk=pk)
+        user = request.user
+        taggable = get_object_or_404(obj_model, id=taggable_pk, user=user)
+        obj_model.objects.filter(id=taggable_pk, user=user).delete()
+        return build_response(request, self.SUCCESS)
+
+    @action(detail=True, methods=['delete',], name='delete-like',
+            url_path="like/(?P<like_id>[^/]+)")
+    def delete_like(self, request, pk=None, like_id=None):
+        return self.delete_lookup(request, Like, pk, like_id)
+
+    @action(detail=True, methods=['delete',], name='delete-comment',
+            url_path="comment/(?P<comment_id>[^/]+)")
+    def delete_comment(self, request, pk=None, comment_id=None):
+        return self.delete_lookup(request, Comment, pk, like_id)
+
+    @action(detail=True, methods=['delete',], name='delete-follower',
+            url_path="follower/(?P<follower_id>[^/]+)")
+    def delete_comment(self, request, pk=None, follower_id=None):
+        return self.delete_lookup(request, Follower, pk, follower_id)
+
+    @action(detail=True, methods=['delete',], name='delete-tag',
+            url_path="tag/(?P<tag_id>[^/]+)")
+    def delete_tag(self, request, pk=None, tag_id=None):
+        return self.delete_lookup(request, Tag, pk, tag_id)

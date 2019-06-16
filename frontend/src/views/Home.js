@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
 import Base from './Base.js';
 import {Link} from '../components/Link.js';
+import * as taggable from '../services/taggable.service.js';
+console.log(taggable);
 
 
 class Home extends Base {
