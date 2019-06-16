@@ -47,44 +47,54 @@ class TaggableUserSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer, ReprMixin):
+
+    id = HashidSerializerCharField()
     user = TaggableUserSerializer()
     obj = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = ('user', 'created_at', 'comment_text', 'obj')
+        fields = ('id', 'user', 'created_at', 'comment_text', 'obj')
 
 
 class TagSerializer(serializers.ModelSerializer):
 
+    id = HashidSerializerCharField()
     user = TaggableUserSerializer()
+
     class Meta:
         model = Tag
-        fields = ('user', 'created_at', 'tag_text',)
+        fields = ('id', 'user', 'created_at', 'tag_text',)
 
 class LikeSerializer(serializers.ModelSerializer, ReprMixin):
 
+    id = HashidSerializerCharField()
     user = TaggableUserSerializer()
     obj = serializers.SerializerMethodField()
 
 
     class Meta:
         model = Like
-        fields = ('user', 'created_at', 'obj',)
+        fields = ('id', 'user', 'created_at', 'obj',)
 
-class DislikeSerializer(serializers.ModelSerializer):
+class DislikeSerializer(serializers.ModelSerializer, ReprMixin):
 
+    id = HashidSerializerCharField()
     user = TaggableUserSerializer()
+    obj = serializers.SerializerMethodField()
 
     class Meta:
         model = Like
-        fields = ('user', 'created_at',)
+        fields = ('id', 'user', 'obj', 'created_at',)
 
 class ReviewSerializer(serializers.ModelSerializer, ReprMixin):
+
+    id = HashidSerializerCharField()
     user = TaggableUserSerializer()
     obj = serializers.SerializerMethodField()
     class Meta:
         model = Review
-        fields = ('user', 'review_text', 'rating', 'created_at', 'obj')
+        fields = ('id', 'user', 'review_text', 'rating', 'created_at', 'obj')
 
 
 class ImageSerializer(serializers.ModelSerializer):

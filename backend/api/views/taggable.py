@@ -9,6 +9,15 @@ from ..serializers.mini_serializers import MiniUserSerializer
 
 
 class TaggableViewSet(viewsets.ViewSet):
+    """mix-in endpoints for all taggable objects:
+       provides detail, list, create, and delete
+       ex:
+          GET /api/bar/1/likes/ -- list all likes for Bar 1
+          POST /api/bar/1/like/ -- creates a like for bar 1
+          DEL /api/bar/1/like/1/ -- delete the like with id 1 for bar 1
+          GET /api/bar/1/like/1/ -- get the full detail of the like
+          (*** NOT IMPLEMEMTED AND MAY NOT BE NEEDED ***)
+    """
     pagination_class = Pagination
     paginate_by = 1
     paginate_by_param = 'page_size'
@@ -33,6 +42,7 @@ class TaggableViewSet(viewsets.ViewSet):
         #determine which method to call
         path = self._get_endpoint(request)
         qs = getattr(obj, path)
+        #TODO: pagination!
         ser = serializer(qs, many=True)
         return build_response(request, ser.data)
 
@@ -63,7 +73,6 @@ class TaggableViewSet(viewsets.ViewSet):
     @action(detail=True, methods=['get'])
     def followers(self, request, pk=None):
         return self.get_taggable(request, pk, FollowerSerializer)
-
 
     def toggle_with_body(self, request, pk=None):
         """either set or unset a taggable item"""
@@ -99,15 +108,15 @@ class TaggableViewSet(viewsets.ViewSet):
     def dislike(self, request, pk=None):
         return self.toggle_with_body(request, pk)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], name='add-review')
     def review(self, request, pk=None):
         return self.toggle_with_body(request, pk)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], name='add-tag')
     def tag(self, request, pk=None):
         return self.toggle_with_body(request, pk)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], name='add-follower')
     def follower(self, request, pk=None):
         return self.toggle_with_body(request, pk)
 
@@ -130,10 +139,15 @@ class TaggableViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['delete',], name='delete-follower',
             url_path="follower/(?P<follower_id>[^/]+)")
-    def delete_comment(self, request, pk=None, follower_id=None):
+    def delete_follower(self, request, pk=None, follower_id=None):
         return self.delete_lookup(request, Follower, pk, follower_id)
 
     @action(detail=True, methods=['delete',], name='delete-tag',
             url_path="tag/(?P<tag_id>[^/]+)")
     def delete_tag(self, request, pk=None, tag_id=None):
         return self.delete_lookup(request, Tag, pk, tag_id)
+
+    @action(detail=True, methods=['delete',], name='delete-review',
+            url_path="review/(?P<review_id>[^/]+)")
+    def delete_review(self, request, pk=None, review_id=None):
+        return self.delete_lookup(request, Review, pk, review_id)
