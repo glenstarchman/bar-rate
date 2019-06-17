@@ -2,7 +2,8 @@ import json
 from django.shortcuts import get_object_or_404
 from ..serializers import *
 from ..serializers.bar import BarSerializer
-from ..models import Bar, User
+from ..serializers.mini_serializers import MiniBarSerializer
+from ..models import Bar, BarMeta, User
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from .base import build_response
@@ -11,19 +12,24 @@ from ..util.truthy import is_true
 
 
 SEARCHABLE_FIELDS = (
-    'name', 'city',
+    'name', 'city', 'address1', 'phone',
 )
 
 
 def build_barmeta_query(request):
     queries = {}
-    fields = []
+    boolean_fields = []
+    char_fields = []
     for field in BarMeta._meta.get_fields():
         if field.get_internal_type() == 'BooleanField':
-            fields.append(field.name)
+            boolean_fields.append(field.name)
+        elif field.get_internal_type() == 'CharField':
+            char_fields.append(field.name)
     for key, value in request.GET.items():
-        if key in fields:
+        if key in boolean_fields:
             queries["barmeta__%s" % (key)] = is_true(value)
+        elif key in char_fields:
+            queries["barmeta__%s" % (key)] = value
 
     return queries
 
@@ -80,6 +86,7 @@ class BarViewSet(TaggableViewSet):
         queryset = Bar.objects.all()
         for key, val in request.GET.items():
             if key in SEARCHABLE_FIELDS:
+                print("adding %s" % (key))
                 k = "%s__icontains" % (key)
                 args[k] = val
 
@@ -100,7 +107,7 @@ class BarViewSet(TaggableViewSet):
         if args:
           queryset = queryset.filter(**args)
 
-        serializer = BarMiniSerializer(queryset, many=True)
+        serializer = MiniBarSerializer(queryset, many=True)
         return build_response(request, serializer.data)
 
     def retrieve(self, request, pk=None):
