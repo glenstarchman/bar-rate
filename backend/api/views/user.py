@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.contrib.contenttypes.models import ContentType
 from ..serializers import *
 from ..models import Bartender, User
 from rest_framework import status, viewsets
@@ -73,3 +74,21 @@ class UserViewSet(TaggableViewSet):
     def me(self, request):
         serializer = UserSerializer(request.user)
         return build_response(request, serializer.data)
+
+    @action(detail=False, methods=['post'],
+            url_path='me/like')
+    def me_like(self, request):
+        """does the logged in user like this object?"""
+        user = request.user
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        #body is of {'obj_type': 'bar', 'obj_id': 1}
+        model = ContentType.objects.get(model=body['obj_type']).model_class()
+        obj = model.objects.get(id=body['obj_id'])
+        qs = obj.likes.filter(user=user)
+        if qs.count() > 0:
+            like = qs[0]
+            return build_response(request, {'likes': True, 'taggable_id': str(like.id)})
+        else:
+            #false
+            return build_response(request, {'likes': False})

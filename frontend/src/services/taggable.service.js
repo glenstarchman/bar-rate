@@ -14,7 +14,7 @@ export const getTaggable = (objType, objId, taggableType) => {
 };
 
 export const deleteTaggable = (objType, objId, taggableType, taggableId) => {
-  let url = `${objType}/${objId}/${taggableType}/${taggableId}`;
+  let url = `${objType}/${objId}/${taggableType}/${taggableId}/`;
   return callApi(url, 'DELETE', null);
 }
 
@@ -73,4 +73,15 @@ export const deleteReview = (objType, objId, taggableId) => {
 
 export const deleteImage = (objType, objId, taggableId) => {
   return deleteTaggable(objType, objId, 'image', taggableId);
+}
+
+export const doesUserLike = (objType, objId) => {
+  //does the logged in user like the given object?
+  let url = `user/me/like/`;
+  let payload = {
+    obj_type: objType,
+    obj_id: objId
+  };
+
+  return callApi(url, 'POST', payload );
 }

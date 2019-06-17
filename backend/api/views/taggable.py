@@ -90,11 +90,13 @@ class TaggableViewSet(viewsets.ViewSet):
         method = "add_%s" % (path,)
         obj = get_object_or_404(self.queryset, pk=pk)
         func = getattr(obj, method)
+        taggable = None
         if body:
-            func(**body)
+            taggable = func(**body)
+            return build_response(request, {'taggable_id': str(taggable.id)})
         else:
             func()
-        return build_response(request, self.SUCCESS)
+            return build_response(request, self.SUCCESS)
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
@@ -124,6 +126,7 @@ class TaggableViewSet(viewsets.ViewSet):
         main_obj = get_object_or_404(self.queryset, pk=pk)
         user = request.user
         taggable = get_object_or_404(obj_model, id=taggable_pk, user=user)
+        print(taggable)
         obj_model.objects.filter(id=taggable_pk, user=user).delete()
         return build_response(request, self.SUCCESS)
 

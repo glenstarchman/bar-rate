@@ -280,9 +280,10 @@ class BarRateTaggableModel(BarRateModel):
             pass
 
     def add_like(self, user):
-        self.likes.create(
+        like = self.likes.create(
             user=user, content_object=self
         )
+        return like.id
 
 
     def add_comment(self, user, comment_text):

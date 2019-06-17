@@ -92,9 +92,9 @@ CELERY_RESULT_BACKEND = 'django-db'
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'api.middleware.AddRequestTimestamp',
     'django.middleware.csrf.CsrfViewMiddleware',
