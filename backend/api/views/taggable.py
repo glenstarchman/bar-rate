@@ -93,7 +93,7 @@ class TaggableViewSet(viewsets.ViewSet):
         taggable = None
         if body:
             taggable = func(**body)
-            return build_response(request, {'taggable_id': str(taggable.id)})
+            return build_response(request, {'taggable_id': taggable.id})
         else:
             func()
             return build_response(request, self.SUCCESS)

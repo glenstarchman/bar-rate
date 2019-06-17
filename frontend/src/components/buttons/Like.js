@@ -14,28 +14,25 @@ export function Like (props) {
 
   const [toggle, setToggle] = useState(false);
   const [likeId, setLikeId] = useState(null);
-  const [initial, setInitial] = useState(true);
-  const [loading, setLoading] = useState(true);
   const firstUpdate = useRef(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
 
     function getLike() {
       return taggable.doesUserLike(props.objType, props.objId)
-                     .then((results) => {
-                       setToggle(results.data.likes);
-                       setLikeId(results.data.taggable_id);
-                       firstUpdate.current = false;
-                     });
+               .then((results) => {
+                 setToggle(results.data.likes);
+                 setLikeId(results.data.taggable_id);
+                 firstUpdate.current = false;
+               });
     }
 
     if (firstUpdate.current) {
-      //first load so get the like
+      //first load so get the like and return
       getLike();
       return;
     }
 
-    console.log(`toggle=${toggle}`)
     if (toggle)  {
       firstUpdate.current = false;
       taggable.addLike(props.objType, props.objId)
@@ -46,7 +43,6 @@ export function Like (props) {
       firstUpdate.current = false;
       //deleting a like
       if (likeId != null) {
-        console.log('deleting');
         taggable.deleteLike(props.objType, props.objId, likeId);
         setLikeId(null);
       }
@@ -59,8 +55,7 @@ export function Like (props) {
       style={styles.link}
       {...props}
       onPress={() => setToggle(!toggle)}
-      title={likeId ? likeId : 'not liked'}
+      title={likeId ? `LIKED: ${likeId}` : 'NOT LIKED'}
     />
   );
-
 };
