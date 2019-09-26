@@ -1,7 +1,9 @@
 {
-  "name": "frontend",
-  "displayName": "frontend",
+  "name": "bar-watch",
+  "displayName": "Bar Watch",
   "expo": {
-    "platforms": ["web"]
-   }
+    "sdkVersion": "33.0.0",
+    "appKey": "bar-watch",
+    "platforms": ["android"]
+  }
 }

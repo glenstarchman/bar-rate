@@ -1,6 +1,11 @@
 import React from 'react';
 import { Stylesheet, Text } from "react-native";
 
+const styles = {
+  link: {
+    color: "#1B95E0"
+  }
+};
 
 
 export const Link = props => (
@@ -10,9 +15,3 @@ export const Link = props => (
     style={styles.link}
   />
 );
-
-const styles = {
-  link: {
-    color: "#1B95E0"
-  }
-};

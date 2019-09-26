@@ -46,6 +46,7 @@ class Home extends Base {
         <Button onPress={() => this.navigate('Bartender', {id: 1})} title="Bartender" />
         <Button onPress={() => this.navigate('Bar', {id: 1})} title="Bar" />
         <Button onPress={() => this.navigate('Profile', {id: 1})} title="Profile" />
+        <Button onPress={() => this.navigate('BarSearch', {id: 1})} title="Searching Bars" />
 
         <Like objType={'bar'} objId={1}/>
       </View>
@@ -66,14 +67,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: "1.5rem",
-    marginVertical: "1em",
+    fontSize: 16,
+    marginVertical: "auto",
     textAlign: "center"
   },
   text: {
-    lineHeight: "1.5em",
-    fontSize: "1.125rem",
-    marginVertical: "1em",
+    lineHeight: 18,
+    fontSize: 16,
     textAlign: "center"
   },
   link: {

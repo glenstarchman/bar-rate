@@ -5,6 +5,7 @@ import { createDrawerNavigator, createStackNavigator,
          createAppContainer } from 'react-navigation';
 import { DrawerActions } from 'react-navigation-drawer';
 import BartenderDetail from '../views/BartenderDetail.js';
+import BarSearch from '../views/BarSearch.js';
 import BarDetail from '../views/BarDetail.js';
 import Home from '../views/Home.js';
 
@@ -84,4 +85,5 @@ export const MainNavigator = createStackNavigator({
   Home: {screen: Home},
   Bar: {screen: BarDetail},
   Bartender: {screen: BartenderDetail},
+  BarSearch: {screen: BarSearch}
 });
